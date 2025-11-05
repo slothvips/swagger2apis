@@ -92,11 +92,22 @@ const renderReqFnName = (api: ApiInfo): string => {
 const renderApiDescription = (api: ApiInfo): string => `${api.tags.join(", ")}: ${api.description}`;
 
 // 获取参数信息
+// ! 因为是自用,所以这里比较极端,基本上只考虑了参数类型只会有一种位置的情况,毕竟自家后端也好沟通('v')
 const renderParams = (api: ApiInfo, config: IConfig): ParamsInfo => {
   const parameters = api.parameters;
   if (!parameters || parameters.length === 0) return { type: "", show: false };
 
-  const parameter = parameters.find((param) => ["path", "query", "body", "formData"].includes(param.position));
+  const parameterFilterList = parameters.filter((param) => ["path", "query", "body", "formData"].includes(param.position));
+
+  if (parameterFilterList[0]?.position === "query") {
+    return {
+      type: `{${parameterFilterList.map((param) => `${param.name}: ${param.type}`).join(",")}}`,
+      show: true,
+      defaultVal: "{} as any"
+    };
+  }
+
+  const parameter = parameterFilterList[0];
 
   // ! 如果是路径参数,这里武断一点,直接判定为string,但是如果后期路径上有多个参数,这里需要修改
   if (parameter?.position === "path") {

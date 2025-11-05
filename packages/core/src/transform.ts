@@ -76,15 +76,16 @@ function generateApis(paths: any): ApiInfo[] {
 // 生成参数信息
 function generateParameters(parameters: any[]): ParameterInfo[] {
   if (!parameters) return [];
-  return parameters
+  const result = parameters
     .filter((param) => ["path", "query", "body", "formData"].includes(param.in))
     .map((param) => ({
       name: param.name,
       description: param.description || "",
-      type: getSchemaType(param.schema),
+      type: param.type || getSchemaType(param.schema),
       required: param.required || false,
       position: param.in
     }));
+  return result;
 }
 const responsesInterfacesSet = new Set();
 // 生成响应信息

@@ -1,7 +1,7 @@
 import path from "node:path";
 import { __dirname_esm, create } from "swagger2apis";
 // 通常情况下,你的json应该通过网络请求去获取,这里为了方便,所以直接使用静态文件
-import swaggerJSON from "./json/swagger_2.json" assert { type: "json" };
+import swaggerJSON from "./json/swagger_2.json";
 
 const app = create(
   // 注意这里是一个对象,不是字符串
